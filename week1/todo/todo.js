@@ -5,7 +5,7 @@
 const TodoController = () => {
 
     const Todo = () => {                                // facade
-        const textAttr = Observable("text");            // we current don't expose it as we don't use it elsewhere
+        const textAttr = Observable("default text");            // we current don't expose it as we don't use it elsewhere
         const doneAttr = Observable(false);
         return {
             getDone:       doneAttr.getValue,
@@ -17,8 +17,10 @@ const TodoController = () => {
         }
     };
 
+
     const todoModel = ObservableList([]); // observable array of Todos, this state is private
     const scheduler = Scheduler();
+
 
     const addTodo = () => {
         const newTodo = Todo();
@@ -26,13 +28,11 @@ const TodoController = () => {
         return newTodo;
     };
 
+
     const addFortuneTodo = () => {
-
         const newTodo = Todo();
-
         todoModel.add(newTodo);
         newTodo.setText('...');
-
         scheduler.add( ok =>
            fortuneService( text => {        // schedule the fortune service and proceed when done
                    newTodo.setText(text);
@@ -41,6 +41,14 @@ const TodoController = () => {
            )
         );
     };
+
+
+    const validateInput = (todo) => {
+        if (todo.getText().length < 4) {
+            console.log("Todo is too short.");
+        }
+    }
+
 
     return {
         numberOfTodos:      todoModel.count,
@@ -51,6 +59,7 @@ const TodoController = () => {
         onTodoAdd:          todoModel.onAdd,
         onTodoRemove:       todoModel.onDel,
         removeTodoRemoveListener: todoModel.removeDeleteListener, // only for the test case, not used below
+        validateInput:      validateInput
     }
 };
 
@@ -60,7 +69,6 @@ const TodoController = () => {
 const TodoItemsView = (todoController, rootElement) => {
 
     const render = todo => {
-
         function createElements() {
             const template = document.createElement('DIV'); // only for parsing
             template.innerHTML = `
@@ -74,6 +82,7 @@ const TodoItemsView = (todoController, rootElement) => {
 
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
+        inputElement.onkeyup    = _ => todoController.validateInput(todo);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
@@ -91,11 +100,11 @@ const TodoItemsView = (todoController, rootElement) => {
     };
 
     // binding
-
     todoController.onTodoAdd(render);
 
     // we do not expose anything as the view is totally passive.
 };
+
 
 const TodoTotalView = (todoController, numberOfTasksElement) => {
 
@@ -103,10 +112,11 @@ const TodoTotalView = (todoController, numberOfTasksElement) => {
         numberOfTasksElement.innerText = "" + todoController.numberOfTodos();
 
     // binding
-
     todoController.onTodoAdd(render);
     todoController.onTodoRemove(render);
 };
+
+
 
 const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
 
@@ -114,7 +124,6 @@ const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
         numberOfOpenTasksElement.innerText = "" + todoController.numberOfopenTasks();
 
     // binding
-
     todoController.onTodoAdd(todo => {
         render();
         todo.onDoneChanged(render);
