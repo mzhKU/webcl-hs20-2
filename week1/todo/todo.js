@@ -43,9 +43,10 @@ const TodoController = () => {
     };
 
 
-    const validateInput = (todo) => {
-        if (todo.getText().length < 4) {
-            console.log("Todo is too short.");
+    const validateInput = (inputText, inputLengthCounter) => {
+        if (inputText.length < 4) {
+            console.log("Input too short.");
+            inputLengthCounter.innerHTML = "Input too short";
         }
     }
 
@@ -59,7 +60,7 @@ const TodoController = () => {
         onTodoAdd:          todoModel.onAdd,
         onTodoRemove:       todoModel.onDel,
         removeTodoRemoveListener: todoModel.removeDeleteListener, // only for the test case, not used below
-        validateInput:      validateInput
+        validateInput:       validateInput
     }
 };
 
@@ -74,15 +75,16 @@ const TodoItemsView = (todoController, rootElement) => {
             template.innerHTML = `
                 <button class="delete">&times;</button>
                 <input type="text" size="42">
-                <input type="checkbox">            
+                <input type="checkbox">
+                <span></span>
             `;
             return template.children;
         }
-        const [deleteButton, inputElement, checkboxElement] = createElements();
+        const [deleteButton, inputElement, checkboxElement, inputLengthCounter] = createElements();
 
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
-        inputElement.onkeyup    = _ => todoController.validateInput(todo);
+        inputElement.onkeyup    = _ => todoController.validateInput(inputElement.value, inputLengthCounter);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
@@ -92,7 +94,6 @@ const TodoItemsView = (todoController, rootElement) => {
             removeMe();
         } );
 
-        todo.onTextChanged(() => inputElement.value = todo.getText());
 
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);
