@@ -43,10 +43,9 @@ const TodoController = () => {
     };
 
 
-    const validateInput = (inputText, inputLengthCounter) => {
-        if (inputText.length < 4) {
+    const validateInput = (inputText) => {
+        if (inputText.value.length < 4) {
             console.log("Input too short.");
-            inputLengthCounter.innerHTML = "Input too short";
         }
     }
 
@@ -84,7 +83,7 @@ const TodoItemsView = (todoController, rootElement) => {
 
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
-        inputElement.onkeyup    = _ => todoController.validateInput(inputElement.value, inputLengthCounter);
+        inputElement.onkeyup    = _ => todoController.validateInput(inputElement, inputLengthCounter);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
