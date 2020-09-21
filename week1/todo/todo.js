@@ -43,9 +43,13 @@ const TodoController = () => {
     };
 
 
-    const validateInput = (inputText) => {
+    const validateInput = (inputText, validationParagraph) => {
         if (inputText.value.length < 4) {
             console.log("Input too short.");
+            validationParagraph.innerText = "" + (4-inputText.value.length) + " characters to go.";
+        }
+        if (inputText.value.length >= 4) {
+            validationParagraph.innerText = "";
         }
     }
 
@@ -73,23 +77,25 @@ const TodoItemsView = (todoController, rootElement) => {
             const template = document.createElement('DIV'); // only for parsing
             template.innerHTML = `
                 <button class="delete">&times;</button>
-                <input type="text" size="42">
+                <input type="text" size="25">
                 <input type="checkbox">
-                <span></span>
+                <h5 class="validation_hint"></h5>
             `;
             return template.children;
         }
-        const [deleteButton, inputElement, checkboxElement, inputLengthCounter] = createElements();
+        const [deleteButton, inputElement, checkboxElement, validationParagraph] = createElements();
 
-        checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
+
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
-        inputElement.onkeyup    = _ => todoController.validateInput(inputElement, inputLengthCounter);
+        inputElement.onkeyup    = _ => todoController.validateInput(inputElement, validationParagraph);
+        checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
             rootElement.removeChild(inputElement);
             rootElement.removeChild(deleteButton);
             rootElement.removeChild(checkboxElement);
+            rootElement.removeChild(validationParagraph);
             removeMe();
         } );
 
@@ -97,6 +103,7 @@ const TodoItemsView = (todoController, rootElement) => {
         rootElement.appendChild(deleteButton);
         rootElement.appendChild(inputElement);
         rootElement.appendChild(checkboxElement);
+        rootElement.appendChild(validationParagraph);
     };
 
     // binding
