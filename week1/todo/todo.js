@@ -94,10 +94,13 @@ const TodoItemsView = (todoController, rootElement) => {
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
             if (removedTodo !== todo) return;
-            rootElement.removeChild(inputElement);
-            rootElement.removeChild(deleteButton);
-            rootElement.removeChild(checkboxElement);
-            rootElement.removeChild(remainCounter);
+
+            div.removeChild(deleteButton);
+            div.removeChild(inputElement);
+            div.removeChild(checkboxElement);
+            div.removeChild(remainCounter);
+
+            rootElement.removeChild(div);
             removeMe();
         } );
 
@@ -107,12 +110,6 @@ const TodoItemsView = (todoController, rootElement) => {
         div.appendChild(remainCounter);
 
         rootElement.appendChild(div);
-
-        // rootElement.appendChild(div);
-        // rootElement.appendChild(deleteButton);
-        // rootElement.appendChild(inputElement);
-        // rootElement.appendChild(checkboxElement);
-        // rootElement.appendChild(remainCounter);
     };
 
     // binding
