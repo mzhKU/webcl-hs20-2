@@ -27,7 +27,7 @@ input[type=text]:focus {
     outline:        transparent none 0;
 }
 #todoContainer {
-    display:        grid;
+    // display:        grid;
     grid-column-gap: 0.5em;
     grid-template-columns: 1.7em auto auto;
     margin-bottom:  0.5em ;
@@ -41,4 +41,8 @@ input[type=text]:focus {
     border: none;
     color: red;
     font-size: 1.3em;
+}
+
+.remain-counter {
+    font-size: 0.5em;
 }

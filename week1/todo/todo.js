@@ -43,13 +43,13 @@ const TodoController = () => {
     };
 
 
-    const validateInput = (inputText, validationParagraph) => {
-        if (inputText.value.length < 4) {
-            console.log("Input too short.");
-            validationParagraph.innerText = "" + (4-inputText.value.length) + " characters to go.";
+    const validateInput = (inputElement, remainCounter) => {
+        var numberOfChars = inputElement.value.length;
+        if (numberOfChars < 4) {
+            remainCounter.textContent = "" + (4-numberOfChars) + " to go.";
         }
-        if (inputText.value.length >= 4) {
-            validationParagraph.innerText = "";
+        if (numberOfChars >= 4) {
+            remainCounter.textContent = "Nice :)";
         }
     }
 
@@ -76,18 +76,20 @@ const TodoItemsView = (todoController, rootElement) => {
         function createElements() {
             const template = document.createElement('DIV'); // only for parsing
             template.innerHTML = `
+            <div>
                 <button class="delete">&times;</button>
                 <input type="text" size="25">
                 <input type="checkbox">
-                <h5 class="validation_hint"></h5>
+                <span class="remain-counter">4 to go.</span>
+            </div>
             `;
             return template.children;
         }
-        const [deleteButton, inputElement, checkboxElement, validationParagraph] = createElements();
-
+        const div = createElements()[0];
+        const [deleteButton, inputElement, checkboxElement, remainCounter] = div.children; 
 
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
-        inputElement.onkeyup    = _ => todoController.validateInput(inputElement, validationParagraph);
+        inputElement.onkeyup    = _ => todoController.validateInput(inputElement, remainCounter);
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
 
         todoController.onTodoRemove( (removedTodo, removeMe) => {
@@ -95,15 +97,22 @@ const TodoItemsView = (todoController, rootElement) => {
             rootElement.removeChild(inputElement);
             rootElement.removeChild(deleteButton);
             rootElement.removeChild(checkboxElement);
-            rootElement.removeChild(validationParagraph);
+            rootElement.removeChild(remainCounter);
             removeMe();
         } );
 
+        div.appendChild(deleteButton);
+        div.appendChild(inputElement);
+        div.appendChild(checkboxElement);
+        div.appendChild(remainCounter);
 
-        rootElement.appendChild(deleteButton);
-        rootElement.appendChild(inputElement);
-        rootElement.appendChild(checkboxElement);
-        rootElement.appendChild(validationParagraph);
+        rootElement.appendChild(div);
+
+        // rootElement.appendChild(div);
+        // rootElement.appendChild(deleteButton);
+        // rootElement.appendChild(inputElement);
+        // rootElement.appendChild(checkboxElement);
+        // rootElement.appendChild(remainCounter);
     };
 
     // binding
