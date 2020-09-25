@@ -130,7 +130,9 @@ const TodoTotalView = (todoController, numberOfTasksElement) => {
 };
 
 
-
+// Der view updated sich  wenn er vom Controller ueber eine Aenderung
+// benachrichtigt wird.
+// "Die View registriert sich auf updates."
 const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
 
     const render = () =>
