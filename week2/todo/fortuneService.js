@@ -10,7 +10,14 @@ const fortunes = [
     "Do the dataflow excel challenge!"
 ];
 
-function fortuneService(whenDone) {
+// function fortuneService(whenDone) {
+//     setTimeout(
+//         () => whenDone(fortunes[Math.floor((Math.random() * fortunes.length))]),
+//         Math.floor((Math.random() * 3000))
+//     );
+// }
+
+const fortuneService = whenDone => {
     setTimeout(
         () => whenDone(fortunes[Math.floor((Math.random() * fortunes.length))]),
         Math.floor((Math.random() * 3000))

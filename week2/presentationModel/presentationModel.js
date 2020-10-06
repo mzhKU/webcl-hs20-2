@@ -14,9 +14,17 @@ const Attribute = value => {
         converter = newConverter;
         setConvertedValue( valueObs.getValue() );
     }
-    const setConvertedValue = value => valueObs.setValue( converter( value ) );
+    const setConvertedValue = value => {
+        valueObs.setValue( converter( value ) 
+    )};
 
-    const setValidator = newValidator => valueObs.onChange( value => validObs.setValue( newValidator(value) ) );
+    const setValidator = newValidator => {
+        //                 callback(value)
+        valueObs.onChange( value => {
+            validObs.setValue( newValidator(value) )
+        })
+    };
 
-    return { valueObs, validObs, setConverter, setValidator, setConvertedValue }
+    return { valueObs, validObs, setConverter,
+             setValidator, setConvertedValue }
 };

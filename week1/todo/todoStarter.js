@@ -1,5 +1,4 @@
-
-import {TodoController, TodoOpenView, TodoTotalView, TodoItemsView } from './todo.js';
+import {TodoController, TodoOpenView, TodoTotalView, TodoItemsView} from './todo.js';
 
 const todoController = TodoController();
 

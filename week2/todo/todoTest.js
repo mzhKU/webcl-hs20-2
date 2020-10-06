@@ -1,4 +1,4 @@
-import { TodoController, TodoItemsView, TodoTotalView, TodoOpenView}  from "./todo.js"
+import { TodoController, TodoItemsView, TodoTotalView, TodoOpenView, fortuneService }  from "./todo.js"
 import { Suite }                from "../test/test.js";
 
 const todoSuite = Suite("todo");

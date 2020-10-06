@@ -35,9 +35,7 @@ const TodoController = () => {
     };
 
     const addFortuneTodo = () => {
-
         const newTodo = Todo();
-
         todoModel.add(newTodo);
         newTodo.setText('...');
 
@@ -48,7 +46,6 @@ const TodoController = () => {
                }
            )
         );
-
     };
 
     return {
@@ -108,11 +105,13 @@ const TodoItemsView = (todoController, rootElement) => {
     };
 
     // binding
-
     todoController.onTodoAdd(render);
 
     // we do not expose anything as the view is totally passive.
 };
+
+
+
 
 const TodoTotalView = (todoController, numberOfTasksElement) => {
 
@@ -120,10 +119,11 @@ const TodoTotalView = (todoController, numberOfTasksElement) => {
         numberOfTasksElement.innerText = "" + todoController.numberOfTodos();
 
     // binding
-
     todoController.onTodoAdd(render);
     todoController.onTodoRemove(render);
 };
+
+
 
 const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
 
@@ -131,7 +131,6 @@ const TodoOpenView = (todoController, numberOfOpenTasksElement) => {
         numberOfOpenTasksElement.innerText = "" + todoController.numberOfopenTasks();
 
     // binding
-
     todoController.onTodoAdd(todo => {
         render();
         todo.onDoneChanged(render);

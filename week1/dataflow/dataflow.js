@@ -1,3 +1,4 @@
+export { Scheduler }
 
 // execute asynchronous tasks in strict sequence
 const Scheduler = () => {

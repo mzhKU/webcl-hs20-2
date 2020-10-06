@@ -1,66 +1,20 @@
-// requires ../observable/observable.js
-// requires ../transformer/transformer.js
-// requires ./fortuneService.js
-// requires ../dataflow/dataflow.js
+import { ObservableList } from "../observable/observable.js";
+import { Attribute }      from "../presentationModel/presentationModel.js";
+import { Scheduler }      from "../dataflow/dataflow.js";
+import { fortuneService } from "./fortuneService.js";
 
-
-const transformer = Transformers()
-
-const capitalTransformer = (attribute) => (event) => {
-    let index = attribute.value ? Number(attribute.value) : 1
-    return event
-        .split(' ')
-        .map(word => word.charAt(index - 1).toUpperCase() + word.slice(index))
-        .reduce((acc, word) => acc + word + ' ', "")
-        .trim()
-}
-const whateverTransformer = (attribute) => (event) => 'whatever'
-
-
-const addSuffix = (attribute) => (event) => event
-    .split(' ')
-    .map(word => {
-        if (word.endsWith(attribute.value)) return word
-        return word + attribute.value
-    })
-    .reduce((acc, word) => acc + word + ' ', "")
-    .trim()
-
-transformer.add('capital', capitalTransformer)
-transformer.add('whatever', whateverTransformer)
-transformer.add('addsuffix', addSuffix)
-
-const validator = Validator()
-
-const maxLength = (attribute) => (value) => {
-    const length = attribute.value ? Number(attribute.value) : -1
-    if (length < 0) return true
-
-    return value.length <= length
-}
-
-const minLength = (attribute) => (value) => {
-    const length = attribute.value ? Number(attribute.value) : -1
-    if (length < 0) return true
-
-    return value.length >= length
-}
-
-validator.add('max', maxLength)
-validator.add('min', minLength)
+export { TodoController, TodoItemsView, TodoTotalView, TodoOpenView }
 
 const TodoController = () => {
 
     const Todo = () => {                                // facade
-<<<<<<< HEAD
-        const textAttr = Observable("default text");            // we current don't expose it as we don't use it elsewhere
-=======
-        const textAttr = Observable("text"); // we current don't expose it as we don't use it elsewhere
-        textAttr.onChange(t => console.log(t))
->>>>>>> c2325132ece790526c73f16947447039efa9d01f
-        const doneAttr = Observable(false);
+        const doneAttr = Attribute(false);
+
+        const textAttr = Attribute("text");
+        textAttr.setValidator(input => input.length >=3 );
+
         return {
-            getDone: doneAttr.getValue,
+            getDone: doneAttr.valueObs.getValue,
             setDone: doneAttr.setValue,
             onDoneChanged: doneAttr.onChange,
             setText: textAttr.setValue,
@@ -85,22 +39,12 @@ const TodoController = () => {
         const newTodo = Todo();
         todoModel.add(newTodo);
         newTodo.setText('...');
-<<<<<<< HEAD
         scheduler.add( ok =>
            fortuneService( text => {        // schedule the fortune service and proceed when done
                    newTodo.setText(text);
                    ok();
                }
            )
-=======
-
-        scheduler.add(ok =>
-            fortuneService(text => {        // schedule the fortune service and proceed when done
-                    newTodo.setText(text);
-                    ok();
-                }
-            )
->>>>>>> c2325132ece790526c73f16947447039efa9d01f
         );
     };
 
@@ -140,7 +84,6 @@ const TodoItemsView = (todoController, rootElement) => {
             template.innerHTML = `
             <div>
                 <button class="delete">&times;</button>
-<<<<<<< HEAD
                 <input type="text" size="25">
                 <input type="checkbox">
                 <span class="remain-counter">4 to go.</span>
@@ -151,24 +94,11 @@ const TodoItemsView = (todoController, rootElement) => {
         const div = createElements()[0];
         const [deleteButton, inputElement, checkboxElement, remainCounter] = div.children; 
 
+        // NICHT MVC weil:
+        // 'validateInput' arbeitet auf dem inputElement (= view) anstatt auf dem todo 
         deleteButton.onclick    = _ => todoController.removeTodo(todo);
         inputElement.onkeyup    = _ => todoController.validateInput(inputElement, remainCounter);
         checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
-=======
-                <input type="text" size="42" max="15"  min="3" capital addsuffix="|" >
-                <input type="checkbox" >            
-            `;
-            return template.children;
-        }
-
-        const [deleteButton, inputElement, checkboxElement] = createElements();
-
-        checkboxElement.onclick = _ => todo.setDone(checkboxElement.checked);
-        deleteButton.onclick = _ => todoController.removeTodo(todo);
-        transformer.registerInputElement(inputElement)
-        validator.registerInputElement(inputElement)
-
->>>>>>> c2325132ece790526c73f16947447039efa9d01f
 
         todoController.onTodoRemove((removedTodo, removeMe) => {
             if (removedTodo !== todo) return;

@@ -1,7 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
-<<<<<<< HEAD
 notes_webcl.txt
-=======
-/webcl-hs20-2.iml
-/.idea
->>>>>>> c2325132ece790526c73f16947447039efa9d01f
+notes_jsdoc.txt
+.idea
+*-noethiger
+*-schmucki
+*.vscode
+node_modules
+out
